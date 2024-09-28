@@ -1,7 +1,13 @@
+import os
+from dotenv import load_dotenv
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 
-# Bot Token from BotFather
-BOT_TOKEN = '7589396100:AAF9JP0GPZamK6hJDImGuu570zkDW9ih_RA'
+# Load environment variables from the .env file
+load_dotenv()
+
+# Fetch the bot token and other sensitive data from the environment variables
+BOT_TOKEN = os.getenv('BOT_TOKEN')
+OWNER_ID = os.getenv('OWNER_ID')  # This is optional, use if needed
 
 # Start command
 def start(update, context):
@@ -18,12 +24,12 @@ def handle_message(update, context):
     # Send a response to the sender
     update.message.reply_text("Your anonymous message has been received!")
 
-    # Optional: Send the message and sender's info to the bot owner (you)
-    bot_owner_id = YOUR_TELEGRAM_USER_ID  # Replace with your Telegram User ID
-    context.bot.send_message(
-        chat_id=bot_owner_id,
-        text=f"Anonymous message from {user.username} (ID: {user.id}): {message_text}"
-    )
+    # Send the message and sender's info to the bot owner (you)
+    if OWNER_ID:
+        context.bot.send_message(
+            chat_id=OWNER_ID,
+            text=f"Anonymous message from {user.username} (ID: {user.id}): {message_text}"
+        )
 
 # Main function to run the bot
 def main():
